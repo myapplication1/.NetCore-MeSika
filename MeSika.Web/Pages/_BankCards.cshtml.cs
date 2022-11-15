@@ -1,20 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace MeSika.Web.Pages.Shared
+namespace MeSika.Web.Pages.BankCards
 {
-    public class _BankCards : PageModel
+    public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
 
-        public _BankCards(ILogger<IndexModel> logger)
+        public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
+            OnGet();
         }
-
+        public string? Name { get; set; }
         public void OnGet()
         {
-
+            Name = "KKKKKKKKKKKKKKKK";
         }
     }
 }
