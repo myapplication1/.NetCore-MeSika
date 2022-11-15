@@ -51,7 +51,7 @@ namespace MeSika.Web.Pages
             Cards_2.CardName = "Kristotro Amoah";
             Cards_2.AccountNumber = "1747-5334X";
             Cards_2.Type = "VISA-DEBIT";
-            Cards_2.img = "img-.jpg";
+            Cards_2.img = "img-1.jpg";
             Cards.Add(Cards_2);
         }
     }
