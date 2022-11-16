@@ -5,9 +5,9 @@ namespace MeSika.Web.Pages.Shared
 {
     public class _Footer : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly ILogger<HomeModel> _logger;
 
-        public _Footer(ILogger<IndexModel> logger)
+        public _Footer(ILogger<HomeModel> logger)
         {
             _logger = logger;
         }

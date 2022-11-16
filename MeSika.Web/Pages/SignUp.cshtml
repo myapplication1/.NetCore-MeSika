@@ -1,16 +1,10 @@
 ﻿@page
-@model MeSika.Web.Pages.Login.LoginModel
+@model HomeModel
 
 @{
     ViewData["Title"] = "Home page";
     Layout = "Shared/_LayoutLogin.cshtml";
-   
-    string startLoader = "none";
-    string alertText = "error ";
-   
-
 }
-
 
 <main class="main-content  mt-0">
     <section>
@@ -50,26 +44,22 @@
                     <div class="col-md-4 d-flex flex-column mx-auto">
                         <div class="card card-plain mt-8">
                             <div class="card-header pb-0 text-left bg-transparent">
-                                <h3 class="font-weight-black text-dark display-6">Sign In</h3>
+                                <h3 class="font-weight-black text-dark display-6">Sign up</h3>
                                 <p class="mb-0">Nice to meet you! Please enter your details.</p>
                             </div>
                             <div class="card-body">
-                                <div class="d-flex justify-content-center">
-                                    <div class="spinner-border" id="showLoader" role="status">
-                                        <span class="sr-only">Loading...</span>
+                                <form role="form">
+                                    <label>Name</label>
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" placeholder="Enter your name" aria-label="Name" aria-describedby="name-addon">
                                     </div>
-                                </div>
-                                <div class="alert alert-secondary text-danger text-sm" id="showAlert" role="alert">
-                                    
-                                </div>
-                                <form>
                                     <label>Email Address</label>
                                     <div class="mb-3">
-                                        <input type="email" id="email" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
+                                        <input type="email" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
                                     </div>
                                     <label>Password</label>
                                     <div class="mb-3">
-                                        <input type="email" id="password" class="form-control" placeholder="Create a password" aria-label="Password" aria-describedby="password-addon">
+                                        <input type="email" class="form-control" placeholder="Create a password" aria-label="Password" aria-describedby="password-addon">
                                     </div>
                                     <div class="form-check form-check-info text-left mb-0">
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
@@ -78,8 +68,7 @@
                                         </label>
                                     </div>
                                     <div class="text-center">
-                                        @*<button>OnClickTest</button>*@
-                                        <button id="btnGet" type="submit" class="btn btn-dark w-100 mt-4 mb-3">Sign In</button>
+                                        <button type="button" class="btn btn-dark w-100 mt-4 mb-3">Sign up</button>
                                        @* <button type="button" class="btn btn-white btn-icon w-100 mb-3">
                                             <span class="btn-inner--icon me-1">
                                                 <img class="w-5" src="../assets/img/logos/google-logo.svg" alt="google-logo" />
@@ -92,7 +81,7 @@
                             <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                 <p class="mb-4 text-xs mx-auto">
                                     Already have an account?
-                                    <a asp-page="/SignUp" class="text-dark font-weight-bold">Sign Up</a>
+                                    <a asp-page="/Index" class="text-dark font-weight-bold">Sign In</a>
                                 </p>
                             </div>
                         </div>
@@ -102,95 +91,3 @@
         </div>
     </section>
 </main>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript">
-    $("#showAlert").hide();
-    $("#showLoader").hide();
-    $(function () {
-        $("#btnGet").click(function (e) {
-            $("#showLoader").show();
-            e.preventDefault();
-          
-            
-            if(validate())
-            {
-              $.ajax({
-                type: "GET",
-                url: "/Index?handler=GetAPI",
-                //beforeSend: function (xhr) {
-                //    xhr.setRequestHeader("XSRF-TOKEN",
-                //        $('input:hidden[name="__RequestVerificationToken"]').val());
-                //},
-                data: { "email": $("#email").val(), "password": $("#password").val() },
-               
-                
-                success: function (response) {
-                      
-                          
-                       
-                        e.stopPropagation();
-                        $("#showLoader").hide();
-                       
-                },
-                failure: function (response) {
-                        $("#showLoader").hide();
-                        e.stopPropagation();
-                },
-                error: function (response) {
-                        $("#showLoader").hide();
-                        e.stopPropagation();
-                }
-            });
-
-            }
-          
-        });
-     
-    });
-
-    function validate() {
-        $("#showAlert").hide();
-       
-        var isOK = true;
-        if ($("#email").val().length < 1) {
-            //$('#email').after('<span class="error">This field is required</span>');
-            isOK = false;
-            $("#showAlert").empty()
-            $("#showAlert").append("<strong>Enter a valid email</strong>")
-          
-            $("#showAlert").show();
-            $("#showLoader").hide();
-            e.stopPropagation();
-            return false
-
-        } else {
-            var regEx =/^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-            var validEmail = regEx.test($("#email").val());
-            if (!validEmail) {
-                $("#showAlert").empty()
-                $("#showAlert").append("<strong>Enter a valid email</strong>")
-                //$('#email').after('<span class="error">Enter a valid email</span>');
-                isOK = false;
-                $("#showAlert").show()
-                $("#showLoader").hide();
-                e.stopPropagation();;
-                 return false
-            }
-        }
-        if ($("#password").val().length < 8) {
-            $("#showAlert").empty()
-            $("#showAlert").append("<strong>At least 8 charaters required</strong>")
-           
-            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
-            isOK = false;
-            $("#showLoader").hide();
-            e.stopPropagation();
-            $("#showAlert").show();
-            return false
-        }
-        return isOK;
-    }
-
-    
-</script>
