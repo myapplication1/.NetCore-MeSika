@@ -3,15 +3,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MeSika.Web.Pages
 {
-    public class LoginModel : PageModel
+    public class SignUpModel : PageModel
     {
-        private readonly ILogger<LoginModel> _logger;
+        private readonly ILogger<HomeModel> _logger;
 
-        public LoginModel(ILogger<LoginModel> logger)
+        public SignUpModel(ILogger<HomeModel> logger)
         {
             _logger = logger;
-          
+
         }
     }
-        
 }

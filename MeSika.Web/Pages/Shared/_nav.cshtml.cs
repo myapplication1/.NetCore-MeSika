@@ -5,9 +5,9 @@ namespace MeSika.Web.Pages.Shared
 {
     public class _Nav : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly ILogger<HomeModel> _logger;
 
-        public _Nav(ILogger<IndexModel> logger)
+        public _Nav(ILogger<HomeModel> logger)
         {
             _logger = logger;
         }
