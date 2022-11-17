@@ -44,7 +44,27 @@ namespace MeSika.Web.Pages.Login
             var response = await client.PostAsync(url, data);
 
             var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                HttpContext.Session.SetString(UserLogged, user.EmailAddress);
+                HttpContext.Session.SetString(Fname, user.FirstName);
+                HttpContext.Session.SetString(Lname, user.LastName);
+                var identity = new ClaimsIdentity(new[]
+                {
+                                new Claim(ClaimTypes.Name,user.EmailAddress ?? string.Empty),
+                                //new Claim(ClaimTypes.Role,totalResults.Tables[0].Rows[0]["Program_Name"].ToString() ?? string.Empty)
+                            }, CookieAuthenticationDefaults.AuthenticationScheme);
 
+                var principal = new ClaimsPrincipal(identity);
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                return new JsonResult(response.IsSuccessStatusCode);
+            }
+
+            else
+            {
+                return new JsonResult(response.IsSuccessStatusCode);
+            }
             return new JsonResult(result);
         }
         public async Task<IActionResult> OnPostGetAPI(string email, string password)

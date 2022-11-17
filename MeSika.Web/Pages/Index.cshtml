@@ -94,7 +94,7 @@
                                 <p class="mb-4 text-xs mx-auto">
                                     Already have an account?
                                     
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="text-dark font-weight-bold">Sign Up</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#SignUpModal" class="text-dark font-weight-bold">Sign Up</a>
                                 </p>
                             </div>
                         </div>
@@ -104,8 +104,8 @@
         </div>
     </section>
 
-    <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal SIgnUp -->
+<div class="modal fade" id="SignUpModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -144,7 +144,7 @@
                                     
                                       <div class="modal-footer">
                                        <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-                                       <button type="button" onClick="Test()" id="btnSignUp" class="btn btn-dark">Save changes</button>
+                                       <button type="button" onClick="Sign()" id="btnSignUp" class="btn btn-dark">Save changes</button>
                                     </div>
                                 </form>
                             </div>
@@ -214,8 +214,7 @@
      
     });
 
-    function Test()
-    {
+    function Sign() {
        $("#showLoaderSignUp").show();
        
        if(validateSign())
@@ -287,21 +286,19 @@
                         "emails": $("#emails").val(),
                         "passwords": $("#passwords").val() 
                       },
-               
-                
+
                 success: function (response) {
                       if(response)
                       {
                             window.location.href = "/Home";
                       }
                       else{
-                            $("#showAlertSignUp").empty()
+                          $("#showAlertSignUp").empty()
                           $("#showAlertSignUp").append("<strong>Invalid email or password</strong>")
           
                            $("#showAlertSignUp").show();
                       }
-                          
-                       
+                     
                        
                         $("#showLoaderSignUp").hide();
                        
@@ -363,17 +360,17 @@
             $("#showAlertSignUp").show();
             return false
         }
-        if ($("#passwords").val().length < 8) {
-            $("#showAlertSignUp").empty()
-            $("#showAlertSignUp").append("<strong>At least 8 charaters required</strong>")
+        //if ($("#passwords").val().length < 8) {
+        //    $("#showAlertSignUp").empty()
+        //    $("#showAlertSignUp").append("<strong>At least 8 charaters required</strong>")
            
-            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
-            isOK = false;
-            $("#showLoaderSignUp").hide();
-            //e.stopPropagation();
-            $("#showAlertSignUp").show();
-            return false
-        }
+        //    //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+        //    isOK = false;
+        //    $("#showLoaderSignUp").hide();
+        //    //e.stopPropagation();
+        //    $("#showAlertSignUp").show();
+        //    return false
+        //}
         if ($("#fname").val().length < 1) {
             $("#showAlertSignUp").empty()
             $("#showAlertSignUp").append("<strong>First Name required</strong>")
