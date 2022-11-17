@@ -5,9 +5,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Xml.Linq;
+using System.Text;
+using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MeSika.Web.Pages
 {
+    [AllowAnonymous]
     public class SignUpModel : PageModel
     {
         private readonly ILogger<SignUpModel> _logger;
@@ -32,40 +36,18 @@ namespace MeSika.Web.Pages
         //}
         public async Task<IActionResult> OnPostGetAPI(Users user)
         {
-            
-            using (var client = new HttpClient())
-            {
-                HttpRequestMessage request = new HttpRequestMessage();
-                request.RequestUri = new Uri("https://app-api-pjs.herokuapp.com/api/Users/" + email + "/" + password);
-                request.Method = HttpMethod.Post;
-                //request.Headers.Add("SecureApiKey", "12345");
-                HttpResponseMessage response = await client.SendAsync(request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var obj = JsonConvert.DeserializeObject<Users>(responseString);
-                var statusCode = response.StatusCode;
-                if (response.IsSuccessStatusCode)
-                {
-                    HttpContext.Session.SetString(UserLogged, email);
-                    HttpContext.Session.SetString(Fname, obj.FirstName);
-                    HttpContext.Session.SetString(Lname, obj.LastName);
-                    var identity = new ClaimsIdentity(new[]
-                    {
-                                new Claim(ClaimTypes.Name,email ?? string.Empty),
-                                //new Claim(ClaimTypes.Role,totalResults.Tables[0].Rows[0]["Program_Name"].ToString() ?? string.Empty)
-                            }, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    var principal = new ClaimsPrincipal(identity);
-                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            var json = JsonConvert.SerializeObject(user);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    return new JsonResult(response.IsSuccessStatusCode);
-                }
+            var url = "https://app-api-pjs.herokuapp.com/api/Users/";
+            using var client = new HttpClient();
 
-                else
-                {
-                    return new JsonResult(response.IsSuccessStatusCode);
-                }
-            }
-            return new JsonResult(null);
+            var response = await client.PostAsync(url, data);
+
+            var result = await response.Content.ReadAsStringAsync();
+       
+            return new JsonResult(result);
         }
         public class Users
         {

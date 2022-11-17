@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.Security.Claims;
+using System.Text;
 
 namespace MeSika.Web.Pages.Login
 
@@ -31,6 +32,21 @@ namespace MeSika.Web.Pages.Login
         //{
         //    return RedirectToPage("Home");
         //}
+        public async Task<IActionResult> OnPostGetAPISignUp(Users user)
+        {
+
+            var json = JsonConvert.SerializeObject(user);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var url = "https://app-api-pjs.herokuapp.com/api/Users/";
+            using var client = new HttpClient();
+
+            var response = await client.PostAsync(url, data);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            return new JsonResult(result);
+        }
         public async Task<IActionResult> OnPostGetAPI(string email, string password)
         {
             //    var claims = new List<Claim>

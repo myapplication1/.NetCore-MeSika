@@ -48,18 +48,30 @@
                                 <p class="mb-0">Nice to meet you! Please enter your details.</p>
                             </div>
                             <div class="card-body">
+                                <div class="d-flex justify-content-center">
+                                    <div class="spinner-border" id="showLoader" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="alert alert-danger text-danger text-sm" id="showAlert" role="alert">
+                                    
+                                </div>
                                 <form role="form">
-                                    <label>Name</label>
+                                    <label>First Name</label>
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" placeholder="Enter your name" aria-label="Name" aria-describedby="name-addon">
+                                        <input type="text" id="fname" class="form-control" placeholder="Enter your name" aria-label="Name" aria-describedby="name-addon">
+                                    </div>
+                                    <label>Last Name</label>
+                                    <div class="mb-3">
+                                        <input type="text" id="lname" class="form-control" placeholder="Enter your name" aria-label="Name" aria-describedby="name-addon">
                                     </div>
                                     <label>Email Address</label>
                                     <div class="mb-3">
-                                        <input type="email" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
+                                        <input type="email" id="email" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
                                     </div>
                                     <label>Password</label>
                                     <div class="mb-3">
-                                        <input type="email" class="form-control" placeholder="Create a password" aria-label="Password" aria-describedby="password-addon">
+                                        <input type="password" id="password" class="form-control" placeholder="Create a password" aria-label="Password" aria-describedby="password-addon">
                                     </div>
                                     <div class="form-check form-check-info text-left mb-0">
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
@@ -91,3 +103,140 @@
         </div>
     </section>
 </main>
+
+                            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#showAlert").hide();
+    $("#showLoader").hide();
+    $(function () {
+        $("#btnGet").click(function (e) {
+            $("#showLoader").show();
+            e.preventDefault();
+          
+            
+            if(validate())
+            {
+              $.ajax({
+                type: "POST",
+                url: "/SignUp?handler=GetAPI",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: { "email": $("#email").val(), "fname": $("#fname").val()
+                "lname": $("#lname").val()
+                "password": $("#password").val() },
+               
+                
+                success: function (response) {
+                      if(response)
+                      {
+                            window.location.href = "/Home";
+                      }
+                      else{
+                            $("#showAlert").empty()
+                          $("#showAlert").append("<strong>Invalid email or password</strong>")
+          
+                           $("#showAlert").show();
+                      }
+                          
+                       
+                       
+                        $("#showLoader").hide();
+                       
+                },
+                failure: function (response) {
+                        $("#showLoader").hide();
+                       
+                },
+                error: function (response) {
+                        $("#showLoader").hide();
+                        
+                }
+            });
+
+            }
+          
+        });
+     
+    });
+
+    function validate() {
+        $("#showAlert").hide();
+       
+        var isOK = true;
+        if ($("#email").val().length < 1) {
+            //$('#email').after('<span class="error">This field is required</span>');
+            isOK = false;
+            $("#showAlert").empty()
+            $("#showAlert").append("<strong>Enter a valid email</strong>")
+          
+            $("#showAlert").show();
+            $("#showLoader").hide();
+            //e.stopPropagation();
+            return false
+
+        } else {
+            var regEx =/^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+            var validEmail = regEx.test($("#email").val());
+            if (!validEmail) {
+                $("#showAlert").empty()
+                $("#showAlert").append("<strong>Enter a valid email</strong>")
+                //$('#email').after('<span class="error">Enter a valid email</span>');
+                isOK = false;
+                $("#showAlert").show()
+                $("#showLoader").hide();
+                //e.stopPropagation();;
+                 return false
+            }
+        }
+        if ($("#password").val().length < 8) {
+            $("#showAlert").empty()
+            $("#showAlert").append("<strong>At least 8 charaters required</strong>")
+           
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoader").hide();
+            //e.stopPropagation();
+            $("#showAlert").show();
+            return false
+        }
+        if ($("#password").val().length < 8) {
+            $("#showAlert").empty()
+            $("#showAlert").append("<strong>At least 8 charaters required</strong>")
+           
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoader").hide();
+            //e.stopPropagation();
+            $("#showAlert").show();
+            return false
+        }
+        if ($("#fname").val().length < 1) {
+            $("#showAlert").empty()
+            $("#showAlert").append("<strong>First Name required</strong>")
+           
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoader").hide();
+            //e.stopPropagation();
+            $("#showAlert").show();
+            return false
+        }
+        if ($("#lname").val().length < 1) {
+            $("#showAlert").empty()
+            $("#showAlert").append("<strong>Last Name required</strong>")
+           
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoader").hide();
+            //e.stopPropagation();
+            $("#showAlert").show();
+            return false
+        }
+        return isOK;
+    }
+
+    
+</script>
