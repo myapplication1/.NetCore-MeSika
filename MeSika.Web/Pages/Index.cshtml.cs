@@ -14,10 +14,17 @@ namespace MeSika.Web.Pages.Login
         }
 
         public string startLoader { get; set; } = "inline-block";
-        public async Task<IActionResult> OnGetGetAPI()
-        {           
-            return Page();
+        //public ActionResult OnPostGetAPI()
+        //{
+        //    return RedirectToPage("Home");
+        //}
+        public async Task<IActionResult> OnPostGetAPI()
+        {
+            //await loginManager.SignOutAsync();
+            var results = "pass";
+
+            return new JsonResult(results);
         }
-       
+
     }
 }

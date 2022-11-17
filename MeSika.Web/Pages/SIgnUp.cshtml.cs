@@ -5,9 +5,9 @@ namespace MeSika.Web.Pages
 {
     public class SignUpModel : PageModel
     {
-        private readonly ILogger<HomeModel> _logger;
+        private readonly ILogger<SignUpModel> _logger;
 
-        public SignUpModel(ILogger<HomeModel> logger)
+        public SignUpModel(ILogger<SignUpModel> logger)
         {
             _logger = logger;
 

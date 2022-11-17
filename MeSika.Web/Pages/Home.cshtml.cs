@@ -10,7 +10,7 @@ namespace MeSika.Web.Pages
         public HomeModel(ILogger<HomeModel> logger)
         {
             _logger = logger;
-            OnGet();
+           // OnGet();
         }
         public string? Username { get; set; }
         public List<Cards>? Cards { get; set; }
