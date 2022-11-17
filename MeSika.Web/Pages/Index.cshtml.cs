@@ -19,7 +19,13 @@ namespace MeSika.Web.Pages.Login
             _logger = logger;
 
         }
+        public async Task<IActionResult> OnGet()
+        {
+            if (User.Identity.IsAuthenticated)
+                return Redirect("/Index");
+            else return Page();
 
+        }
         public string startLoader { get; set; } = "inline-block";
         //public ActionResult OnPostGetAPI()
         //{
@@ -48,11 +54,18 @@ namespace MeSika.Web.Pages.Login
                 var statusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode)
                 {
-                    //API call success, Do your action
-                    HttpContext.Session.SetString(UserLogged,email);
+                    HttpContext.Session.SetString(UserLogged, email);
                     HttpContext.Session.SetString(Fname, obj.FirstName);
                     HttpContext.Session.SetString(Lname, obj.LastName);
+                    var identity = new ClaimsIdentity(new[]
+                    {
+                                new Claim(ClaimTypes.Name,email ?? string.Empty),
+                                //new Claim(ClaimTypes.Role,totalResults.Tables[0].Rows[0]["Program_Name"].ToString() ?? string.Empty)
+                            }, CookieAuthenticationDefaults.AuthenticationScheme);
 
+                    var principal = new ClaimsPrincipal(identity);
+                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+               
                     return new JsonResult(response.IsSuccessStatusCode);
                 }
 
