@@ -126,8 +126,17 @@
                
                 
                 success: function (response) {
-                      
-                          window.location.href = "/Home";
+                      if(response)
+                      {
+                            window.location.href = "/Home";
+                      }
+                      else{
+                            $("#showAlert").empty()
+                          $("#showAlert").append("<strong>Invalid email or password</strong>")
+          
+                           $("#showAlert").show();
+                      }
+                          
                        
                        
                         $("#showLoader").hide();

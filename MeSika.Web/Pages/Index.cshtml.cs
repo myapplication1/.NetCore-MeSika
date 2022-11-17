@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace MeSika.Web.Pages.Login
+
 {
     public class LoginModel : PageModel
     {
@@ -18,13 +22,38 @@ namespace MeSika.Web.Pages.Login
         //{
         //    return RedirectToPage("Home");
         //}
-        public async Task<IActionResult> OnPostGetAPI()
+        public async Task<IActionResult> OnPostGetAPI(string email, string password)
         {
-            //await loginManager.SignOutAsync();
-            var results = "pass";
+            //    var claims = new List<Claim>
+            //{
+            //    new Claim(ClaimTypes.Name, email)
+            //};
+            //    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            //    var principal = new ClaimsPrincipal(identity);
+            //    await HttpContext.SignInAsync(principal);
+            //    //await loginManager.SignOutAsync();
+            //    var results = "pass";
+            using (var client = new HttpClient())
+            {
+                HttpRequestMessage request = new HttpRequestMessage();
+                request.RequestUri = new Uri("https://app-api-pjs.herokuapp.com/api/Users/" + email + "/" + password);
+                request.Method = HttpMethod.Get;
+                //request.Headers.Add("SecureApiKey", "12345");
+                HttpResponseMessage response = await client.SendAsync(request);
+                var responseString = await response.Content.ReadAsStringAsync();
+                var statusCode = response.StatusCode;
+                if (response.IsSuccessStatusCode)
+                {
+                    //API call success, Do your action
+                    return new JsonResult(response.IsSuccessStatusCode);
+                }
 
-            return new JsonResult(results);
+                else
+                {
+                    return new JsonResult(response.IsSuccessStatusCode);
+                }
+            }
+            return new JsonResult(null);
         }
-
     }
 }
