@@ -144,7 +144,7 @@
                                     
                                       <div class="modal-footer">
                                        <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-                                       <button type="button" onClick="SignUpCall" id="btnSignUp" class="btn btn-dark">Save changes</button>
+                                       <button type="button" onClick="Test()" id="btnSignUp" class="btn btn-dark">Save changes</button>
                                     </div>
                                 </form>
                             </div>
@@ -204,7 +204,7 @@
                 },
                 error: function (response) {
                         $("#showLoader").hide();
-                        
+       
                 }
             });
 
@@ -213,6 +213,57 @@
         });
      
     });
+
+    function Test()
+    {
+       $("#showLoaderSignUp").show();
+       
+       if(validateSign())
+       {
+              $.ajax({
+                type: "POST",
+                url: "/Index?handler=GetAPISignUp",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: { "fname": $("#fname").val(),
+                        "fname": $("#lname").val(),
+                        "emails": $("#emails").val(),
+                        "passwords": $("#passwords").val() 
+                      },
+               
+                
+                success: function (response) {
+                      if(response)
+                      {
+                            window.location.href = "/Home";
+                      }
+                      else{
+                            $("#showAlertSignUp").empty()
+                          $("#showAlertSignUp").append("<strong>Invalid email or password</strong>")
+          
+                           $("#showAlertSignUp").show();
+                      }
+                          
+                       
+                       
+                        $("#showLoaderSignUp").hide();
+                       
+                },
+                failure: function (response) {
+                        $("#showLoaderSignUp").hide();
+                       
+                },
+                error: function (response) {
+                        $("#showLoaderSignUp").hide();
+                        
+                }
+            });
+
+       }
+    }
+
     function SignUpCall()
    
     {
