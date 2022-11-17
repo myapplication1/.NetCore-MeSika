@@ -170,7 +170,7 @@
           
             $("#showAlert").show();
             $("#showLoader").hide();
-            e.stopPropagation();
+            //e.stopPropagation();
             return false
 
         } else {
@@ -184,7 +184,7 @@
                 isOK = false;
                 $("#showAlert").show()
                 $("#showLoader").hide();
-                e.stopPropagation();;
+                //e.stopPropagation();;
                  return false
             }
         }
@@ -195,7 +195,7 @@
             //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
             isOK = false;
             $("#showLoader").hide();
-            e.stopPropagation();
+            //e.stopPropagation();
             $("#showAlert").show();
             return false
         }
