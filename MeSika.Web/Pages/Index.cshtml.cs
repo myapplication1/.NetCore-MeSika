@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace MeSika.Web.Pages.Login
@@ -10,7 +11,9 @@ namespace MeSika.Web.Pages.Login
     public class LoginModel : PageModel
     {
         private readonly ILogger<LoginModel> _logger;
-
+        public const string UserLogged = "UserLogged";
+        public const string Fname = "Fname";
+        public const string Lname = "Lname";
         public LoginModel(ILogger<LoginModel> logger)
         {
             _logger = logger;
@@ -41,10 +44,15 @@ namespace MeSika.Web.Pages.Login
                 //request.Headers.Add("SecureApiKey", "12345");
                 HttpResponseMessage response = await client.SendAsync(request);
                 var responseString = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<Users>(responseString);
                 var statusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode)
                 {
                     //API call success, Do your action
+                    HttpContext.Session.SetString(UserLogged,email);
+                    HttpContext.Session.SetString(Fname, obj.FirstName);
+                    HttpContext.Session.SetString(Lname, obj.LastName);
+
                     return new JsonResult(response.IsSuccessStatusCode);
                 }
 
@@ -54,6 +62,42 @@ namespace MeSika.Web.Pages.Login
                 }
             }
             return new JsonResult(null);
+        }
+        public class Users
+        {
+            public string Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string MiddleName { get; set; }
+            public string DOB { get; set; }
+            public string EmailAddress { get; set; }
+            public string Phone { get; set; }
+            public string PhotoUrl { get; set; }
+            public string Password { get; set; }
+
+            public object events { get; set; }
+            public List<object> guests { get; set; }
+        }
+        public class UsersDTO
+        {
+
+            public string Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string MiddleName { get; set; }
+            public string DOB { get; set; }
+            public string EmailAddress { get; set; }
+            public string Phone { get; set; }
+            public string PhotoUrl { get; set; }
+            public string Password { get; set; }
+
+            public object events { get; set; }
+            public object guests { get; set; }
+        }
+        public async Task<IActionResult> OnPostLogoutAsync()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToPage("/SignIn/Login");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
+using Microsoft.AspNetCore.Http;
 namespace MeSika.Web.Pages.Shared
 {
     public class _Welcome : PageModel
