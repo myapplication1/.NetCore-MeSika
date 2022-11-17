@@ -22,7 +22,7 @@ namespace MeSika.Web.Pages.Login
         public async Task<IActionResult> OnGet()
         {
             if (User.Identity.IsAuthenticated)
-                return Redirect("/Index");
+                return Redirect("/");
             else return Page();
 
         }
