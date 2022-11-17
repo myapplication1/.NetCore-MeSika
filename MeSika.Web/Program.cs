@@ -17,11 +17,17 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 
 builder.Services.AddDistributedMemoryCache();
-
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = System.TimeSpan.FromMinutes(3);
+    options.SlidingExpiration = true;
+    options.LoginPath = "/Index";
+});
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(3);
     options.Cookie.HttpOnly = true;
+
     options.Cookie.IsEssential = true;
 });
 builder.Services.AddAntiforgery(x => x.HeaderName = "XSRF-TOKEN");
