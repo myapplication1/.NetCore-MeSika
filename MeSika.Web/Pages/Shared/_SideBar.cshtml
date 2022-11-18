@@ -24,12 +24,13 @@
             </div>
             <div class="modal-body">
                 <div class="card-body">
-                   @* <div class="d-flex justify-content-center">
-                        <div class="spinner-border" id="showLoaderSignUp" role="status">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border" id="showLoaderWallet" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>*@
-                   
+                    </div>
+                    <div class="alert alert-danger text-danger text-sm" id="showAlertSignUp" role="alert">
+                    </div>
                     <form method="post">
                         <label>Card Name</label>
                         <div class="mb-3">
@@ -41,11 +42,11 @@
                         </div>
                         <label>Account Number</label>
                         <div class="mb-3">
-                            <input type="text" id="emails" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
+                            <input type="text" id="account" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
                         </div>
                         <label>Card Type</label>
                         <div class="mb-3">
-                            <select class="form-control">
+                            <select id="type" class="form-control">
                                 <option>VISA-DEBIT</option>
                                 <option>VISA-CREDIT</option>
                                 <option>MASTER-DEBIT</option>
@@ -56,7 +57,7 @@
                         </div>
                         <label>Current Balance</label>
                         <div class="mb-3">
-                            <input type="number" id="emails" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
+                            <input type="number" id="amount" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
                         </div>
                         
 
@@ -209,3 +210,118 @@
         </div>
     </div>
 </aside>
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+ <script type="text/javascript">
+    $("#showLoaderWallet").hide();
+    function Sign() {
+        $("#showLoaderWallet").show();
+
+        if (validate()) {
+            $.ajax({
+                type: "POST",
+                url: "/Index?handler=GetAPIWallet",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: {
+                    "cname": $("#cname").val(),
+                    "bname": $("#bname").val(),
+                    "emails": $("#emails").val(),
+                    "account": $("#account").val()
+                    "amount": $("#amount").val()
+                    "type": $("#type").val()
+                },
+
+
+                success: function (response) {
+                    if (response) {
+                        window.location.href = "/Home";
+                    }
+                    else {
+                        $("#showAlertSignUp").empty()
+                        $("#showAlertSignUp").append("<strong>Invalid email or password</strong>")
+
+                        $("#showAlertSignUp").show();
+                    }
+
+
+
+                    $("#showLoaderWallet").hide();
+
+                },
+                failure: function (response) {
+                    $("#showLoaderWallet").hide();
+
+                },
+                error: function (response) {
+                    $("#showLoaderWallet").hide();
+
+                }
+            });
+
+        }
+    }
+
+    function validate() {
+        $("#showAlertSignUp").hide();
+
+        var isOK = true;
+      
+        if ($("#cname").val().length < 0) {
+            $("#showAlertSignUp").empty()
+            $("#showAlertSignUp").append("<strong> name required</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderWallet").hide();
+            $("#showAlertSignUp").show();
+            return false
+        }
+        //if ($("#passwords").val().length < 8) {
+        //    $("#showAlertSignUp").empty()
+        //    $("#showAlertSignUp").append("<strong>At least 8 charaters required</strong>")
+
+        //    //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+        //    isOK = false;
+        //    $("#showLoaderSignUp").hide();
+        //    //e.stopPropagation();
+        //    $("#showAlertSignUp").show();
+        //    return false
+        //}
+        if ($("#bname").val().length < 1) {
+            $("#showAlertSignUp").empty()
+            $("#showAlertSignUp").append("<strong>Bank Name required</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderWallet").hide();
+            $("#showAlertSignUp").show();
+            return false
+        }
+        if ($("#account").val().length < 1) {
+            $("#showAlertSignUp").empty()
+            $("#showAlertSignUp").append("<strong>account number required</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderWallet").hide();
+            $("#showAlertSignUp").show();
+            return false
+        }
+        if ($("#type").val().length < 1) {
+            $("#showAlertSignUp").empty()
+            $("#showAlertSignUp").append("<strong>select card type</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderWallet").hide();
+            $("#showAlertSignUp").show();
+            return false
+        }
+        return isOK;
+    }
+
+    </script>
