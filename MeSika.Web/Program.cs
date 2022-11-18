@@ -7,11 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 //builder.Services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);
-builder.Services.AddRazorPages();
-    
-    //options =>
-    //{ options.Conventions.AuthorizePage("/Home"); 
-    //});
+builder.Services.AddRazorPages(
+options =>
+{
+    options.Conventions.AuthorizePage("/Home");
+});
 builder.Services.AddMvc();
 //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
