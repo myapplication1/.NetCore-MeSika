@@ -24,9 +24,7 @@ namespace MeSika.Web.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            if (User.Identity.IsAuthenticated)
-                return Redirect("/Home");
-            else return Redirect("/"); ;
+            return Page();
 
         }
         public string startLoader { get; set; } = "inline-block";

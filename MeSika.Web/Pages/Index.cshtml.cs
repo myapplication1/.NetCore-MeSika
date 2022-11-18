@@ -22,9 +22,10 @@ namespace MeSika.Web.Pages.Login
         }
         public async Task<IActionResult> OnGet()
         {
-            if (User.Identity.IsAuthenticated)
-                return Redirect("/");
-            else return Page();
+            //if (User.Identity.IsAuthenticated)
+            //    return Redirect("/");
+            //else 
+                return Page();
 
         }
         public string startLoader { get; set; } = "inline-block";
@@ -32,8 +33,13 @@ namespace MeSika.Web.Pages.Login
         //{
         //    return RedirectToPage("Home");
         //}
-        public async Task<IActionResult> OnPostGetAPISignUp(Users user)
+        public async Task<IActionResult> OnPostGetAPISignUp(string fname, string lname,string emails,string passwords)
         {
+            Users user = new Users();
+            user.FirstName = fname;
+            user.LastName = lname;
+            user.EmailAddress = emails;
+            user.Password = passwords;  
 
             var json = JsonConvert.SerializeObject(user);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
@@ -124,25 +130,9 @@ namespace MeSika.Web.Pages.Login
             public string PhotoUrl { get; set; }
             public string Password { get; set; }
 
-            public object events { get; set; }
-            public List<object> guests { get; set; }
+          
         }
-        public class UsersDTO
-        {
-
-            public string Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string MiddleName { get; set; }
-            public string DOB { get; set; }
-            public string EmailAddress { get; set; }
-            public string Phone { get; set; }
-            public string PhotoUrl { get; set; }
-            public string Password { get; set; }
-
-            public object events { get; set; }
-            public object guests { get; set; }
-        }
+       
         public async Task<IActionResult> OnPostLogoutAsync()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
