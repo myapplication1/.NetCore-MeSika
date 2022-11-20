@@ -79,7 +79,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Banking Cards/Wallet </h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Sources of Income  </h5>
                 <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -94,21 +94,15 @@
                     <div class="alert alert-danger text-danger text-sm" id="showAlertIncome" role="alert">
                     </div>
                     <form method="post">
-                        <label>Card Name</label>
+                        <label>Income Source</label>
                         <div class="mb-3">
-                            <input type="text" id="cname" class="form-control" placeholder="Enter your name" aria-label="Name" aria-describedby="name-addon">
+                            <input type="text" id="from" class="form-control" placeholder="Enter your name" aria-label="Name" aria-describedby="name-addon">
                         </div>
-                        <label>Bank Name</label>
-                        <div class="mb-3">
-                            <input type="text" id="bname" class="form-control" placeholder="Enter your name" aria-label="Name" aria-describedby="name-addon">
-                        </div>
+                       
                         <label>Account Number</label>
+                       
                         <div class="mb-3">
-                            <input type="text" id="account" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
-                        </div>
-                        <label>Card Type</label>
-                        <div class="mb-3">
-                            <select id="type" class="form-control">
+                            <select id="accont" class="form-control">
                                 <option>VISA-DEBIT</option>
                                 <option>VISA-CREDIT</option>
                                 <option>MASTER-DEBIT</option>
@@ -117,15 +111,30 @@
                             </select>
 
                         </div>
-                        <label>Current Balance</label>
+
+                        <label>Type</label>
+                       
+                        <div class="mb-3">
+                            <select id="type" class="form-control">
+                                <option>One-Time</option>
+                                <option>Recurring</option>
+                               
+                            </select>
+
+                        </div>
+                         <label>Amount</label>
                         <div class="mb-3">
                             <input type="number" id="amount" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
+                        </div>
+                        <label>Post Datee</label>
+                        <div class="mb-3">
+                            <input type="date" id="amount" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
                         </div>
 
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-                            <button type="button" onClick="Sign()" id="btnSignUp" class="btn btn-dark">Save changes</button>
+                            <button type="button" onClick="submitIncome()" id="btnSignUp" class="btn btn-dark">Save changes</button>
                         </div>
                     </form>
                 </div>
@@ -279,7 +288,9 @@
  <script type="text/javascript">
     $("#showLoaderWallet").hide();
      $("#showAlertWallet").hide();
-    function submitWallet() {
+     $("#showLoaderIncome").hide();
+     $("#showAlertIncome").hide();
+    function submitIncome() {
         $("#showLoaderWallet").show();
       
         if (validate()) {
@@ -331,7 +342,58 @@
 
         }
     }
+     function submitWallet() {
+        $("#showLoaderWallet").show();
+      
+        if (validate()) {
+            $.ajax({
+                type: "POST",
+                url: "/Index?handler=GetAPIWallet",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: {
+                    "cname": $("#cname").val(),
+                    "bname": $("#bname").val(),
+                    "emails": $("#emails").val(),
+                    "account": $("#account").val(),
+                    "amount": $("#amount").val(),
+                    "type": $("#type").val()
+                  
+                },
 
+
+                success: function (response) {
+                    if (response) {
+                             console.log(response)
+                        window.location.href = "/Home";
+                    }
+                    else {
+                        $("#showAlertWallet").empty()
+                        console.log(response)
+                        $("#showAlertWallet").append("<strong>Invalid email or password</strong>")
+
+                        $("#showAlertWallet").show();
+                    }
+
+
+
+                    $("#showLoaderWallet").hide();
+
+                },
+                failure: function (response) {
+                    $("#showLoaderWallet").hide();
+
+                },
+                error: function (response) {
+                    $("#showLoaderWallet").hide();
+
+                }
+            });
+
+        }
+    }
     function validate() {
         $("#showAlertWallet").hide();
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MeSika.Web.Pages.Modals;
+using Newtonsoft.Json;
 
 namespace MeSika.Web.Pages
 {
@@ -14,60 +16,45 @@ namespace MeSika.Web.Pages
             _logger = logger;
            // OnGet();
         }
-        public string? Username { get; set; }
-        public List<Cards>? Cards { get; set; }
-        public void OnGet()
+        public class BankCards
         {
-            Username = "kamoah";
 
-            Cards = new List<Cards>();
-            var Cards_ = new Cards();
-            Cards_.CardName = "Kristotro Amoah";
-            Cards_.AccountNumber = "3414-234X";
-            Cards_.Type = "VISA-CREDIT";
-            Cards_.img = "img-1.jpg";
-            Cards.Add(Cards_);
+            public string Id { get; set; }
+            public string BankName { get; set; }
+            public string Type { get; set; }
+            public string AccountNumber { get; set; }
+            public DateTime Expiry { get; set; }
+            public string CardName { get; set; }
+            public String img { get; set; }
+            public decimal amount { get; set; }
+            public string email { get; set; }
 
-            var Cards__ = new Cards();
-            Cards__.CardName = "Kristotro Amoah";
-            Cards__.AccountNumber = "0565-452X";
-            Cards__.Type = "VISA-DEBIT";
-            Cards__.img = "img-2.jpg";
-            Cards.Add(Cards__);
 
-            var Cards___ = new Cards();
-            Cards___.CardName = "Kristotro Amoah";
-            Cards___.AccountNumber = "1234-234X";
-            Cards___.Type = "VISA-DEBIT";
-            Cards___.img = "img-3.jpg";
-            Cards.Add(Cards___);
+        }
+        public string? Username { get; set; }
+        public List<BankCards> Cards { get; set; }
+        public async Task OnGet()
+        {
+            using (var client = new HttpClient())
+            {
+                HttpRequestMessage request = new HttpRequestMessage();
+                request.RequestUri = new Uri("https://app-api-pjs.herokuapp.com/api/BankCard");
+                request.Method = HttpMethod.Get;
+                //request.Headers.Add("SecureApiKey", "12345");
+                HttpResponseMessage response = await client.SendAsync(request);
+                var responseString = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<List<BankCards>>(responseString);
+                var statusCode = response.StatusCode;
+                if (response.IsSuccessStatusCode)
+                {
+                    Cards = obj;                                    
+                }
 
-            var Cards_1 = new Cards();
-            Cards_1.CardName = "Kristotro Amoah";
-            Cards_1.AccountNumber = "4124-854X";
-            Cards_1.Type = "MASTER-DEBIT";
-            Cards_1.img = "img-5.jpg";
-            Cards.Add(Cards_1);
-
-            var Cards_2 = new Cards();
-            Cards_2.CardName = "Kristotro Amoah";
-            Cards_2.AccountNumber = "1747-5334X";
-            Cards_2.Type = "VISA-DEBIT";
-            Cards_2.img = "img-1.jpg";
-            Cards.Add(Cards_2);
+               
+            }
+          
         }
     }
 
-    public class Cards
-    {
-        public string Id { get; set; }
-        public string BankName { get; set; }
-        public string Type { get; set; }
-        public string AccountNumber { get; set; }
-        public DateTime Expiry { get; set; }
-        public string CardName { get; set; }
-        public String img { get; set; }
-        public decimal amount { get; set; }
-
-    }
+  
 }

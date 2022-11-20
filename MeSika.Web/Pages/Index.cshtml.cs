@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using MeSika.Web.Pages.Modals;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -38,21 +39,113 @@ namespace MeSika.Web.Pages.Login
            decimal amount, string type)
 
         {
-
+            var tt = HttpContext.Session.GetString("UserLogged");
             Random random = new Random();
-            var rNumber = random.Next(0, 5);
-            Cards Cards = new Cards();
-            Cards.BankName = bname;
-            Cards.CardName = cname;
-            //Cards.email = emails;
-            Cards.Type = type;
-            Cards.img = "img-" + rNumber;
-            Cards.amount = amount;
-            Cards.AccountNumber = account;
+            var rNumber = random.Next(1, 5);
+            BankCards Cards = new BankCards
+            {
+                BankName = bname,
+                CardName = cname,
+                email = HttpContext.Session.GetString("UserLogged"),
+                Type = type,
+                Expiry = DateTime.UtcNow,
+                img = "img-" + rNumber+".jpg",
+                amount = amount,
+                AccountNumber = account
+            };
             var json = JsonConvert.SerializeObject(Cards);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
             var url = "https://app-api-pjs.herokuapp.com/api/BankCard";
+            using var client = new HttpClient();
+
+            var response = await client.PostAsync(url, data);
+
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+
+                return new JsonResult(response.IsSuccessStatusCode);
+            }
+
+            else
+            {
+                return new JsonResult(response.IsSuccessStatusCode);
+            }
+            return new JsonResult(result);
+        }
+        public class BankCards
+        {
+
+            public string Id { get; set; }
+            public string BankName { get; set; }
+            public string Type { get; set; }
+            public string email { get; set; }
+            public string AccountNumber { get; set; }
+            public DateTime Expiry { get; set; }
+            public string CardName { get; set; }
+            public String img { get; set; }
+            public decimal amount { get; set; }
+
+
+        }
+
+        public async Task<IActionResult> OnPostGetAPIExpense(
+          string description, string source, string account , decimal amount , DateTime datePost
+         )
+
+        {
+
+            
+            Expense exp = new Expense();
+            exp.From = source;
+            exp.To = source;
+            exp.Description = description;
+            //Cards.email = emails;
+            exp.Amount = amount;
+            exp.Status = "Posted";
+            exp.DateEntered = datePost;
+            var json = JsonConvert.SerializeObject(exp);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var url = "https://app-api-pjs.herokuapp.com/api/Expense";
+            using var client = new HttpClient();
+
+            var response = await client.PostAsync(url, data);
+
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+
+                return new JsonResult(response.IsSuccessStatusCode);
+            }
+
+            else
+            {
+                return new JsonResult(response.IsSuccessStatusCode);
+            }
+            return new JsonResult(result);
+        }
+
+
+        public async Task<IActionResult> OnPostGetAPIIncome(
+          string description, string source, string account, decimal amount, DateTime datePost , string ty)
+
+        {
+
+            Income exp = new Income();
+            exp.From = source;
+            exp.To = source;
+            exp.Description = description;
+            exp.type = ty;
+            exp.email = HttpContext.Session.GetString("UserLogged");
+            exp.Amount = amount;
+            exp.Status = "Posted";
+            exp.DateEntered = datePost;
+            var json = JsonConvert.SerializeObject(exp);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var url = "https://app-api-pjs.herokuapp.com/api/Expense";
             using var client = new HttpClient();
 
             var response = await client.PostAsync(url, data);
