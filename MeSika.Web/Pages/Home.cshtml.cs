@@ -67,6 +67,7 @@ namespace MeSika.Web.Pages
         public DateTime Expiry { get; set; }
         public string CardName { get; set; }
         public String img { get; set; }
+        public decimal amount { get; set; }
 
     }
 }

@@ -12,6 +12,7 @@
     z-index: 100001 !important;
   }
 </style>
+@Html.AntiForgeryToken()
 <!-- Modal Wallets -->
 <div class="modal fade" id="AddWalletModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -29,7 +30,7 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>
-                    <div class="alert alert-danger text-danger text-sm" id="showAlertSignUp" role="alert">
+                    <div class="alert alert-danger text-danger text-sm" id="showAlertWallet" role="alert">
                     </div>
                     <form method="post">
                         <label>Card Name</label>
@@ -57,13 +58,13 @@
                         </div>
                         <label>Current Balance</label>
                         <div class="mb-3">
-                            <input type="number" id="amount" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
+                            <input type="number" id="amount" class="form-control" placeholder="Enter amount" aria-label="Email" aria-describedby="email-addon">
                         </div>
                         
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-                            <button type="button" onClick="Sign()" id="btnSignUp" class="btn btn-dark">Save changes</button>
+                            <button type="button" onClick="submitWallet()" id="btnSignUp" class="btn btn-dark">Save changes</button>
                         </div>
                     </form>
                 </div>
@@ -277,9 +278,10 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
  <script type="text/javascript">
     $("#showLoaderWallet").hide();
-    function Sign() {
+     $("#showAlertWallet").hide();
+    function submitWallet() {
         $("#showLoaderWallet").show();
-
+      
         if (validate()) {
             $.ajax({
                 type: "POST",
@@ -295,18 +297,21 @@
                     "account": $("#account").val(),
                     "amount": $("#amount").val(),
                     "type": $("#type").val()
+                  
                 },
 
 
                 success: function (response) {
                     if (response) {
+                             console.log(response)
                         window.location.href = "/Home";
                     }
                     else {
-                        $("#showAlertSignUp").empty()
-                        $("#showAlertSignUp").append("<strong>Invalid email or password</strong>")
+                        $("#showAlertWallet").empty()
+                        console.log(response)
+                        $("#showAlertWallet").append("<strong>Invalid email or password</strong>")
 
-                        $("#showAlertSignUp").show();
+                        $("#showAlertWallet").show();
                     }
 
 
@@ -328,18 +333,18 @@
     }
 
     function validate() {
-        $("#showAlertSignUp").hide();
+        $("#showAlertWallet").hide();
 
         var isOK = true;
       
-        if ($("#cname").val().length < 0) {
-            $("#showAlertSignUp").empty()
-            $("#showAlertSignUp").append("<strong> name required</strong>")
+        if ($("#cname").val().length < 1) {
+            $("#showAlertWallet").empty()
+            $("#showAlertWallet").append("<strong> name required</strong>")
 
             //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
             isOK = false;
             $("#showLoaderWallet").hide();
-            $("#showAlertSignUp").show();
+            $("#showAlertWallet").show();
             return false
         }
         //if ($("#passwords").val().length < 8) {
@@ -354,13 +359,13 @@
         //    return false
         //}
         if ($("#bname").val().length < 1) {
-            $("#showAlertSignUp").empty()
-            $("#showAlertSignUp").append("<strong>Bank Name required</strong>")
+            $("#showAlertWallet").empty()
+            $("#showAlertWallet").append("<strong>Bank Name required</strong>")
 
             //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
             isOK = false;
-            $("#showLoaderWallet").hide();
-            $("#showAlertSignUp").show();
+              $("#showLoaderWallet").hide();
+            $("#showAlertWallet").show();
             return false
         }
         if ($("#account").val().length < 1) {
@@ -369,8 +374,8 @@
 
             //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
             isOK = false;
-            $("#showLoaderWallet").hide();
-            $("#showAlertSignUp").show();
+             $("#showLoaderWallet").hide();
+            $("#showAlertWallet").show();
             return false
         }
         if ($("#type").val().length < 1) {
@@ -379,8 +384,8 @@
 
             //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
             isOK = false;
-            $("#showLoaderWallet").hide();
-            $("#showAlertSignUp").show();
+             $("#showLoaderWallet").hide();
+            $("#showAlertWallet").show();
             return false
         }
         return isOK;

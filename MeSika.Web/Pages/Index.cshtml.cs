@@ -33,6 +33,44 @@ namespace MeSika.Web.Pages.Login
         //{
         //    return RedirectToPage("Home");
         //}
+        public async Task<IActionResult> OnPostGetAPIWallet(
+          string cname, string bname, string emails, string account,
+           decimal amount, string type)
+
+        {
+
+            Random random = new Random();
+            var rNumber = random.Next(0, 5);
+            Cards Cards = new Cards();
+            Cards.BankName = bname;
+            Cards.CardName = cname;
+            //Cards.email = emails;
+            Cards.Type = type;
+            Cards.img = "img-" + rNumber;
+            Cards.amount = amount;
+            Cards.AccountNumber = account;
+            var json = JsonConvert.SerializeObject(Cards);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var url = "https://app-api-pjs.herokuapp.com/api/BankCard";
+            using var client = new HttpClient();
+
+            var response = await client.PostAsync(url, data);
+
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+
+                return new JsonResult(response.IsSuccessStatusCode);
+            }
+
+            else
+            {
+                return new JsonResult(response.IsSuccessStatusCode);
+            }
+            return new JsonResult(result);
+        }
+
         public async Task<IActionResult> OnPostGetAPISignUp(string fname, string lname,string emails,string passwords)
         {
             Users user = new Users();
