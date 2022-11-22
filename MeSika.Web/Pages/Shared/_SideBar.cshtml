@@ -103,11 +103,11 @@
                        
                         <div class="mb-3">
                             <select id="accont" class="form-control">
-                                <option>VISA-DEBIT</option>
-                                <option>VISA-CREDIT</option>
-                                <option>MASTER-DEBIT</option>
-                                <option>MASTER-DEBIT</option>
-                                <option>OTHER</option>
+                                <option>account-1</option>
+                                <option>account-2</option>
+                                <option>account-3</option>
+                                <option>account-4</option>
+                                
                             </select>
 
                         </div>
@@ -116,8 +116,9 @@
                        
                         <div class="mb-3">
                             <select id="type" class="form-control">
-                                <option>One-Time</option>
-                                <option>Recurring</option>
+                                <option>ONE-TIME</option>
+                                <option>RECURRING</option>
+                                <option>RECURRING-WAGES</option>
                                
                             </select>
 
@@ -126,9 +127,9 @@
                         <div class="mb-3">
                             <input type="number" id="amount" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
                         </div>
-                        <label>Post Datee</label>
+                        <label>Post Date</label>
                         <div class="mb-3">
-                            <input type="date" id="amount" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
+                            <input type="date" id="datePost" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
                         </div>
 
 
@@ -293,21 +294,22 @@
     function submitIncome() {
         $("#showLoaderWallet").show();
       
-        if (validate()) {
+        if (validateIncome()) {
             $.ajax({
                 type: "POST",
-                url: "/Index?handler=GetAPIWallet",
+                url: "/Index?handler=GetAPIIncome",
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("XSRF-TOKEN",
                         $('input:hidden[name="__RequestVerificationToken"]').val());
                 },
                 data: {
-                    "cname": $("#cname").val(),
-                    "bname": $("#bname").val(),
-                    "emails": $("#emails").val(),
+                    "from": $("#from").val(),
                     "account": $("#account").val(),
+                    "type": $("#type").val(),
+                    "datePost": $("#datePost").val(),
+
                     "amount": $("#amount").val(),
-                    "type": $("#type").val()
+                  
                   
                 },
 
@@ -318,24 +320,24 @@
                         window.location.href = "/Home";
                     }
                     else {
-                        $("#showAlertWallet").empty()
+                        $("#showAlertIncome").empty()
                         console.log(response)
-                        $("#showAlertWallet").append("<strong>Invalid email or password</strong>")
+                        $("#showAlertIncome").append("<strong>Invalid email or password</strong>")
 
-                        $("#showAlertWallet").show();
+                        $("#showAlertIncome").show();
                     }
 
 
 
-                    $("#showLoaderWallet").hide();
+                    $("#showLoaderIncome").hide();
 
                 },
                 failure: function (response) {
-                    $("#showLoaderWallet").hide();
+                    $("#showLoaderIncome").hide();
 
                 },
                 error: function (response) {
-                    $("#showLoaderWallet").hide();
+                    $("#showLoaderIncome").hide();
 
                 }
             });
@@ -452,5 +454,52 @@
         }
         return isOK;
     }
+    function validateIncome() {
+        $("#showAlertWallet").hide();
 
+        var isOK = true;
+
+        if ($("#from").val().length < 1) {
+            $("#showAlertIncome").empty()
+            $("#showAlertIncome").append("<strong> source required</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderIncome").hide();
+            $("#showAlertIncome").show();
+            return false
+        }
+       
+        if ($("#account").val().length < 1) {
+            $("#showAlertIncome").empty()
+            $("#showAlertIncome").append("<strong>account required</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderIncome").hide();
+            $("#showAlertIncome").show();
+            return false
+        }
+        if ($("#amount").val().length < 1) {
+            $("#showAlertIncome").empty()
+            $("#showAlertIncome").append("<strong>amount required</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderIncome").hide();
+            $("#showAlertIncome").show();
+            return false
+        }
+        if ($("#type").val().length < 1) {
+            $("#showAlertIncome").empty()
+            $("#showAlertIncome").append("<strong>select a type</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderIncome").hide();
+            $("#showAlertIncome").show();
+            return false
+        }
+        return isOK;
+    }
     </script>
