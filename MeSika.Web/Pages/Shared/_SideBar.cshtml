@@ -74,7 +74,7 @@
     </div>
 </div>
 
-<!-- Modal Income/Expense -->
+<!-- Modal Income/ -->
 <div class="modal fade" id="AddIncomeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -136,6 +136,77 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
                             <button type="button" onClick="submitIncome()" id="btnSignUp" class="btn btn-dark">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal /Expense -->
+<div class="modal fade" id="AddExpenseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Bills/Expense incurred  </h5>
+                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border" id="showLoaderExpense" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger text-danger text-sm" id="showAlertExpense" role="alert">
+                    </div>
+                    <form method="post">
+                        
+
+                        <label>Account Number</label>
+
+                        <div class="mb-3">
+                            <select id="accontE" class="form-control">
+                                <option>account-1</option>
+                                <option>account-2</option>
+                                <option>account-3</option>
+                                <option>account-4</option>
+
+                            </select>
+
+                        </div>
+                        <label>Pay To</label>
+                        <div class="mb-3">
+                            <input type="text" id="toE" class="form-control" placeholder="Enter your name" aria-label="Name" aria-describedby="name-addon">
+                        </div>
+                        <label>Type</label>
+
+                        <div class="mb-3">
+                            <select id="typeE" class="form-control">
+                                <option>ONE-TIME</option>
+                                <option>RECURRING</option>
+                                <option>RECURRING-WAGES</option>
+
+                            </select>
+
+                        </div>
+                        <label>Amount</label>
+                        <div class="mb-3">
+                            <input type="number" id="amountE" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
+                        </div>
+                        <label>Post Date</label>
+                        <div class="mb-3">
+                            <input type="date" id="datePostE" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+                            <button type="button" onClick="submitExpense()" id="btnSignUp" class="btn btn-dark">Save changes</button>
                         </div>
                     </form>
                 </div>
@@ -288,9 +359,53 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
  <script type="text/javascript">
     $("#showLoaderWallet").hide();
-     $("#showAlertWallet").hide();
-     $("#showLoaderIncome").hide();
-     $("#showAlertIncome").hide();
+    $("#showAlertWallet").hide();
+    $("#showLoaderIncome").hide();
+    $("#showAlertIncome").hide();
+    $("#showLoaderExpense").hide();
+    $("#showAlertExpense").hide();
+    function submitExpense() {
+        $("#showLoaderExpense").show();
+
+        if (validateExpense()) {
+            $.ajax({
+                type: "POST",
+                url: "/Index?handler=GetAPIExpense",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: {
+                    "to": $("#toE").val(),
+                    "account": $("#accountE").val(),
+                    "type": $("#typeE").val(),
+                    "datePost": $("#datePostE").val(),
+                    "amount": $("#amountE").val(),
+                },
+                success: function (response) {
+                    if (response) {
+                        console.log(response)
+                        window.location.href = "/Home";
+                    }
+                    else {
+                        $("#showAlertExpense").empty()
+                        console.log(response)
+                        $("#showAlertExpense").append("<strong>Invalid email or password</strong>")
+                        $("#showAlertExpense").show();
+                    }
+                    $("#showLoaderExpense").hide();
+                },
+                failure: function (response) {
+                    $("#showLoaderExpense").hide();
+                },
+                error: function (response) {
+                    $("#showLoaderExpense").hide();
+
+                }
+            });
+
+        }
+    }
     function submitIncome() {
         $("#showLoaderWallet").show();
       
@@ -307,9 +422,7 @@
                     "account": $("#account").val(),
                     "type": $("#type").val(),
                     "datePost": $("#datePost").val(),
-
                     "amount": $("#amount").val(),
-                  
                   
                 },
 
@@ -344,7 +457,7 @@
 
         }
     }
-     function submitWallet() {
+    function submitWallet() {
         $("#showLoaderWallet").show();
       
         if (validate()) {
@@ -498,6 +611,54 @@
             isOK = false;
             $("#showLoaderIncome").hide();
             $("#showAlertIncome").show();
+            return false
+        }
+        return isOK;
+    }
+    function validateExpense() {
+        $("#showAlertExpense").hide();
+
+        var isOK = true;
+
+        if ($("#toE").val().length < 1) {
+            $("#showAlertExpense").empty()
+            $("#showAlertExpense").append("<strong> bill from required</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderExpense").hide();
+            $("#showAlertExpense").show();
+            return false
+        }
+
+        if ($("#accountE").val().length < 1) {
+            $("#showAlertExpense").empty()
+            $("#showAlertExpense").append("<strong>account required</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderExpense").hide();
+            $("#showAlertExpense").show();
+            return false
+        }
+        if ($("#amountE").val().length < 1) {
+            $("#showAlertExpense").empty()
+            $("#showAlertExpense").append("<strong>amount required</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderExpense").hide();
+            $("#showAlertExpense").show();
+            return false
+        }
+        if ($("#typeE").val().length < 1) {
+            $("#showAlertExpense").empty()
+            $("#showAlertExpense").append("<strong>select a type</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderExpense").hide();
+            $("#showAlertExpense").show();
             return false
         }
         return isOK;
