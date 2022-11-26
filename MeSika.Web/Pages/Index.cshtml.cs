@@ -129,23 +129,23 @@ namespace MeSika.Web.Pages.Login
 
 
         public async Task<IActionResult> OnPostGetAPIIncome(
-          string description, string source, string account, decimal amount, DateTime datePost , string ty)
+          string from, string account, string type, DateTime datePost , string amount)
 
         {
 
             Income exp = new Income();
-            exp.From = source;
-            exp.To = source;
-            exp.Description = description;
-            exp.type = ty;
+            exp.From = from;
+            exp.To = account;
+           // exp.Description = description;
+            exp.type = type;
             exp.email = HttpContext.Session.GetString("UserLogged");
-            exp.Amount = amount;
+            exp.Amount =Convert.ToDecimal(   amount);
             exp.Status = "Posted";
             exp.DateEntered = datePost;
             var json = JsonConvert.SerializeObject(exp);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var url = "https://app-api-pjs.herokuapp.com/api/Expense";
+            var url = "https://app-api-pjs.herokuapp.com/api/Income";
             using var client = new HttpClient();
 
             var response = await client.PostAsync(url, data);
@@ -232,7 +232,8 @@ namespace MeSika.Web.Pages.Login
                     HttpContext.Session.SetString(Lname, obj.LastName);
                     var identity = new ClaimsIdentity(new[]
                     {
-                                new Claim(ClaimTypes.Name,email ?? string.Empty),
+                                new Claim(ClaimTypes.Name,obj.FirstName ?? string.Empty),
+                                 new Claim(ClaimTypes.Email,email ?? string.Empty),
                                 //new Claim(ClaimTypes.Role,totalResults.Tables[0].Rows[0]["Program_Name"].ToString() ?? string.Empty)
                             }, CookieAuthenticationDefaults.AuthenticationScheme);
 

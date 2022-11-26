@@ -33,7 +33,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.ExpireTimeSpan = System.TimeSpan.FromMinutes(3);
     options.SlidingExpiration = true;
-    options.LoginPath = "/Index";
+    options.LoginPath = "/";
 });
 builder.Services.AddSession(options =>
 {

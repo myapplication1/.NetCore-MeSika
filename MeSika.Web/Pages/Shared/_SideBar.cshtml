@@ -96,18 +96,17 @@
                     <form method="post">
                         <label>Income Source</label>
                         <div class="mb-3">
-                            <input type="text" id="from" class="form-control" placeholder="Enter your name" aria-label="Name" aria-describedby="name-addon">
+                            <input type="text" id="fromI" class="form-control" placeholder="Enter your name" aria-label="Name" aria-describedby="name-addon">
                         </div>
                        
                         <label>Account Number</label>
                        
                         <div class="mb-3">
-                            <select id="accont" class="form-control">
-                                <option>account-1</option>
-                                <option>account-2</option>
-                                <option>account-3</option>
-                                <option>account-4</option>
-                                
+                           <select id="accountI" class="form-control">
+                                <option>3123123123</option>
+                                <option>123123123123</option>
+                                <option>123123123</option>
+                               
                             </select>
 
                         </div>
@@ -115,7 +114,7 @@
                         <label>Type</label>
                        
                         <div class="mb-3">
-                            <select id="type" class="form-control">
+                            <select id="typeI" class="form-control">
                                 <option>ONE-TIME</option>
                                 <option>RECURRING</option>
                                 <option>RECURRING-WAGES</option>
@@ -125,7 +124,7 @@
                         </div>
                          <label>Amount</label>
                         <div class="mb-3">
-                            <input type="number" id="amount" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
+                            <input type="text" id="amountI" class="form-control" placeholder="Enter your email address" aria-label="Email" aria-describedby="email-addon">
                         </div>
                         <label>Post Date</label>
                         <div class="mb-3">
@@ -418,11 +417,11 @@
                         $('input:hidden[name="__RequestVerificationToken"]').val());
                 },
                 data: {
-                    "from": $("#from").val(),
-                    "account": $("#account").val(),
-                    "type": $("#type").val(),
+                    "from": $("#fromI").val(),
+                    "account": $("#accountI").val(),
+                    "type": $("#typeI").val(),
                     "datePost": $("#datePost").val(),
-                    "amount": $("#amount").val(),
+                    "amount": $("#amountI").val(),
                   
                 },
 
@@ -568,11 +567,11 @@
         return isOK;
     }
     function validateIncome() {
-        $("#showAlertWallet").hide();
+        $("#showAlertIncome").hide();
 
         var isOK = true;
 
-        if ($("#from").val().length < 1) {
+        if ($("#fromI").val().length < 1) {
             $("#showAlertIncome").empty()
             $("#showAlertIncome").append("<strong> source required</strong>")
 
@@ -582,18 +581,9 @@
             $("#showAlertIncome").show();
             return false
         }
-       
-        if ($("#account").val().length < 1) {
-            $("#showAlertIncome").empty()
-            $("#showAlertIncome").append("<strong>account required</strong>")
-
-            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
-            isOK = false;
-            $("#showLoaderIncome").hide();
-            $("#showAlertIncome").show();
-            return false
-        }
-        if ($("#amount").val().length < 1) {
+        var dd= $("#amountI").val()
+      
+        if ($("#amountI").val().length < 1) {
             $("#showAlertIncome").empty()
             $("#showAlertIncome").append("<strong>amount required</strong>")
 
@@ -603,9 +593,20 @@
             $("#showAlertIncome").show();
             return false
         }
-        if ($("#type").val().length < 1) {
+        if ($("#typeI").val().length < 1) {
             $("#showAlertIncome").empty()
             $("#showAlertIncome").append("<strong>select a type</strong>")
+
+            //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
+            isOK = false;
+            $("#showLoaderIncome").hide();
+            $("#showAlertIncome").show();
+            return false
+        }
+        var dd= $("#datePost").val()
+        if ($("#datePost").val().length < 1) {
+            $("#showAlertIncome").empty()
+            $("#showAlertIncome").append("<strong>Date required</strong>")
 
             //$('#password').after('<span class="error">Password must be at least 8 characters long</span>');
             isOK = false;
