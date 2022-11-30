@@ -1,4 +1,4 @@
-﻿@page
+﻿@*@page*@
 @model HomeModel
 @{
     //ViewData["Title"] = "Home page";
@@ -13,6 +13,7 @@
   }
 </style>
 @Html.AntiForgeryToken()
+
 <!-- Modal Wallets -->
 <div class="modal fade" id="AddWalletModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -100,14 +101,18 @@
                         </div>
                        
                         <label>Account Number</label>
-                       
+                      
                         <div class="mb-3">
-                           <select id="accountI" class="form-control">
+                            @*<td> @Html.DropDownList("account", (IEnumerable<SelectListItem>)ViewData["account"]) </td>*@
+                           @*@Html.DropDownList("", new SelectList(ViewData["account"], "AccountID", "AccountName"))*@
+                            @*@Model.Options;*@
+                            <select id="accountI" asp-items="@Model.Options" class="form-control"></select>
+                          @* <select id="accountI" class="form-control">
                                 <option>3123123123</option>
                                 <option>123123123123</option>
                                 <option>123123123</option>
                                
-                            </select>
+                            </select>*@
 
                         </div>
 
@@ -169,13 +174,15 @@
                         <label>Account Number</label>
 
                         <div class="mb-3">
+                             <select id="accountE" asp-items="@Model.Options" class="form-control"></select>
+                     @*
                             <select id="accontE" class="form-control">
                                 <option>account-1</option>
                                 <option>account-2</option>
                                 <option>account-3</option>
                                 <option>account-4</option>
 
-                            </select>
+                            </select>*@
 
                         </div>
                         <label>Pay To</label>

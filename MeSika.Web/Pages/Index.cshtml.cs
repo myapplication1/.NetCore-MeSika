@@ -127,6 +127,31 @@ namespace MeSika.Web.Pages.Login
             return new JsonResult(result);
         }
 
+        public async Task<IActionResult> OnPostGetAPIBankCards(      
+        )
+
+        {
+
+
+          
+            var url = "https://app-api-pjs.herokuapp.com/api/BankCards/"+ HttpContext.Session.GetString("UserLogged"); 
+            using var client = new HttpClient();
+
+            var response = await client.GetAsync(url);
+
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+
+                return new JsonResult(response.IsSuccessStatusCode);
+            }
+
+            else
+            {
+                return new JsonResult(response.IsSuccessStatusCode);
+            }
+            return new JsonResult(result);
+        }
 
         public async Task<IActionResult> OnPostGetAPIIncome(
           string from, string account, string type, DateTime datePost , string amount)
@@ -268,7 +293,7 @@ namespace MeSika.Web.Pages.Login
         public async Task<IActionResult> OnPostLogoutAsync()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToPage("/SignIn/Login");
+            return RedirectToPage("/");
         }
     }
 }
