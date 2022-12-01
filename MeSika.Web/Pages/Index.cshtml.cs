@@ -106,7 +106,7 @@ namespace MeSika.Web.Pages.Login
             //Cards.email = emails;
             exp.Amount = amount;
             exp.Status = "Posted";
-            exp.DateEntered = datePost;
+            exp.DateEntered = datePost.ToString();
             var json = JsonConvert.SerializeObject(exp);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -168,7 +168,7 @@ namespace MeSika.Web.Pages.Login
             exp.email = HttpContext.Session.GetString("UserLogged");
             exp.Amount =Convert.ToDecimal(   amount);
             exp.Status = "Posted";
-            exp.DateEntered = datePost;
+            exp.DateEntered = datePost.ToString();
             var json = JsonConvert.SerializeObject(exp);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 

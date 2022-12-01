@@ -8,7 +8,7 @@
         public string From { get; set; }
         public string To { get; set; }
         public string type { get; set; }    
-        public DateTime DateEntered { get; set; }
+        public string DateEntered { get; set; }
         public string Status { get; set; }
         public string Description { get; set; }
         public string email { get; set; }

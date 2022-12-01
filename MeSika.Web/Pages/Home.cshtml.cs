@@ -15,7 +15,7 @@ namespace MeSika.Web.Pages
         public HomeModel(ILogger<HomeModel> logger)
         {
             _logger = logger;
-           // OnGet();
+            // OnGet();
         }
         public class BankCards
         {
@@ -36,11 +36,14 @@ namespace MeSika.Web.Pages
         public string Message { get; set; }
         public string? Username { get; set; }
         public List<BankCards> Cards { get; set; }
+        public List<Expense> Expense { get; set; }
+        public List<Income> Income { get; set; }
         public async Task OnGet()
         {
             Message = "Hello World";
             await GetBankCards();
-            
+            //await IncomeList();
+            await ExpensesList();
             Options = Cards.Select(a =>
                                           new SelectListItem
                                           {
@@ -48,7 +51,7 @@ namespace MeSika.Web.Pages
                                               Text = a.AccountNumber
                                           }).ToList();
             ViewData["Account"] = Options;
-           
+
             //var res = await OnPostGetAPIBankCards();
             //var obj_ = JsonConvert.DeserializeObject<List<BankCards>>(res);
             //using (var client = new HttpClient())
@@ -82,6 +85,50 @@ namespace MeSika.Web.Pages
         //    //                                  Text = a.Name
         //    //                              }).ToList();
         //}
+        public async Task ExpensesList()
+        {
+
+            var url = "https://app-api-pjs.herokuapp.com/api/Expense/" + HttpContext.Session.GetString("UserLogged");
+            using var client = new HttpClient();
+
+            var response = await client.GetAsync(url);
+
+            // var result = await response.Content.ReadAsStringAsync();
+            var responseString = await response.Content.ReadAsStringAsync();
+            var obj = JsonConvert.DeserializeObject<List<Expense>>(responseString);
+            if (response.IsSuccessStatusCode)
+            {
+                Expense = obj;
+
+                // return new JsonResult(result);
+            }
+
+
+
+
+        }
+        public async Task IncomeList()
+        {
+
+            var url = "https://app-api-pjs.herokuapp.com/api/Income/" + HttpContext.Session.GetString("UserLogged");
+            using var client = new HttpClient();
+
+            var response = await client.GetAsync(url);
+
+            // var result = await response.Content.ReadAsStringAsync();
+            var responseString = await response.Content.ReadAsStringAsync();
+            var obj = JsonConvert.DeserializeObject<List<Income>>(responseString);
+            if (response.IsSuccessStatusCode)
+            {
+                Income = obj;
+
+                // return new JsonResult(result);
+            }
+
+
+
+
+        }
         public async Task GetBankCards()
         {
 
@@ -90,61 +137,18 @@ namespace MeSika.Web.Pages
 
             var response = await client.GetAsync(url);
 
-           // var result = await response.Content.ReadAsStringAsync();
+            // var result = await response.Content.ReadAsStringAsync();
             var responseString = await response.Content.ReadAsStringAsync();
             var obj = JsonConvert.DeserializeObject<List<BankCards>>(responseString);
             if (response.IsSuccessStatusCode)
             {
                 Cards = obj;
 
-               // return new JsonResult(result);
+                // return new JsonResult(result);
             }
 
-            else
-            {
-               // return new JsonResult(response.IsSuccessStatusCode);
-            }
-           // return new JsonResult(result);
 
-
-            //using (var client = new HttpClient())
-            //{
-            //    HttpRequestMessage request = new HttpRequestMessage();
-            //    request.RequestUri = new Uri("https://app-api-pjs.herokuapp.com/api/BankCard" + HttpContext.Session.GetString("UserLogged"));
-            //    request.Method = HttpMethod.Get;
-            //    //request.Headers.Add("SecureApiKey", "12345");
-            //    HttpResponseMessage response = await client.SendAsync(request);
-            //    var responseString = await response.Content.ReadAsStringAsync();
-            //    var obj = JsonConvert.DeserializeObject<List<BankCards>>(responseString);
-            //    var statusCode = response.StatusCode;
-            //    if (response.IsSuccessStatusCode)
-            //    {
-            //        Cards = obj;
-            //    }
-
-
-            //}
-
-
-            //var url = "https://app-api-pjs.herokuapp.com/api/BankCard/" + HttpContext.Session.GetString("UserLogged");
-            //using var client = new HttpClient();
-
-            //var response = await client.GetAsync(url);
-
-            //var result = await response.Content.ReadAsStringAsync();
-            //if (response.IsSuccessStatusCode)
-            //{
-
-            //    return new JsonResult(result);
-            //}
-
-            //else
-            //{
-            //    return new JsonResult(response.IsSuccessStatusCode);
-            //}
-           // return new JsonResult(result);
         }
-    }
 
-  
+    }
 }
