@@ -91,16 +91,18 @@ namespace MeSika.Web.Pages.Login
         }
 
         public async Task<IActionResult> OnPostGetAPIExpense(
-          string description, string source, string account , decimal amount , DateTime datePost
+          string description, string to, string account, string type, decimal amount , DateTime datePost
          )
 
         {
 
             
             Expense exp = new Expense();
-            exp.From = source;
-            exp.To = source;
+            exp.From = account;
+            exp.To = to;
             exp.Description = description;
+            exp.email = HttpContext.Session.GetString("UserLogged"); ;
+            exp.type = type;
             //Cards.email = emails;
             exp.Amount = amount;
             exp.Status = "Posted";
